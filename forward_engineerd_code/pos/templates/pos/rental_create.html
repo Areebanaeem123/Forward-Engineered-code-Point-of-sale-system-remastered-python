@@ -1,0 +1,55 @@
+{% extends "pos/base.html" %}
+
+{% block title %}New Rental - POS System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h4><i class="bi bi-calendar-check"></i> Create New Rental</h4>
+            </div>
+            <div class="card-body">
+                <form method="post">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="{{ form.phone_number.id_for_label }}" class="form-label">Customer Phone Number</label>
+                        {{ form.phone_number }}
+                    </div>
+                    <div class="mb-3">
+                        <label for="{{ form.item_id.id_for_label }}" class="form-label">Item ID</label>
+                        {{ form.item_id }}
+                    </div>
+                    <div class="mb-3">
+                        <label for="{{ form.quantity.id_for_label }}" class="form-label">Quantity</label>
+                        {{ form.quantity }}
+                    </div>
+                    <button type="submit" class="btn btn-success w-100">
+                        <i class="bi bi-check-circle"></i> Create Rental
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header bg-info text-white">
+                <h5><i class="bi bi-list"></i> Available for Rental</h5>
+            </div>
+            <div class="card-body">
+                <div class="list-group">
+                    {% for item in available_items %}
+                    <div class="list-group-item">
+                        <strong>{{ item.name }}</strong> (ID: {{ item.item_id }})<br>
+                        <small class="text-muted">Stock: {{ item.stock_rental }} | Price: ${{ item.price }}</small>
+                    </div>
+                    {% empty %}
+                    <p class="text-muted">No items available for rental.</p>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+

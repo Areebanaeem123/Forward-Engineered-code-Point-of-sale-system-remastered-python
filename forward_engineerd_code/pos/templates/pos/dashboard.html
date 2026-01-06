@@ -1,0 +1,75 @@
+{% extends "pos/base.html" %}
+
+{% block title %}Dashboard - POS System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h2><i class="bi bi-speedometer2"></i> Dashboard</h2>
+        <p class="text-muted">Welcome, {{ employee_name }}!</p>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-md-3">
+        <div class="card text-white bg-primary mb-3">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-cart-plus"></i> New Sale</h5>
+                <p class="card-text">Start a new sale transaction</p>
+                <a href="{% url 'pos:sale_create' %}" class="btn btn-light">Create Sale</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-success mb-3">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-calendar-check"></i> New Rental</h5>
+                <p class="card-text">Create a new rental</p>
+                <a href="{% url 'pos:rental_create' %}" class="btn btn-light">Create Rental</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-info mb-3">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-box-seam"></i> Inventory</h5>
+                <p class="card-text">View and manage inventory</p>
+                <a href="{% url 'pos:item_list' %}" class="btn btn-light">View Inventory</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="card text-white bg-warning mb-3">
+            <div class="card-body">
+                <h5 class="card-title"><i class="bi bi-arrow-return-left"></i> Returns</h5>
+                <p class="card-text">Process rental returns</p>
+                <a href="{% url 'pos:rental_return' %}" class="btn btn-light">Process Return</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% if is_admin %}
+<div class="row mt-4">
+    <div class="col-12">
+        <div class="card">
+            <div class="card-header bg-dark text-white">
+                <h5><i class="bi bi-gear"></i> Admin Functions</h5>
+            </div>
+            <div class="card-body">
+                <a href="{% url 'pos:employee_list' %}" class="btn btn-outline-primary me-2">
+                    <i class="bi bi-people"></i> Manage Employees
+                </a>
+                <a href="{% url 'pos:item_create' %}" class="btn btn-outline-success me-2">
+                    <i class="bi bi-plus-circle"></i> Add Item
+                </a>
+                <a href="{% url 'pos:sale_list' %}" class="btn btn-outline-info">
+                    <i class="bi bi-list-ul"></i> View All Sales
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+{% endif %}
+{% endblock %}
+

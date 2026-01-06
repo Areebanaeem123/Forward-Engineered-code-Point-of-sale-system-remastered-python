@@ -1,0 +1,120 @@
+{% extends "pos/base.html" %}
+
+{% block title %}New Sale - POS System{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header bg-primary text-white">
+                <h4><i class="bi bi-cart-plus"></i> New Sale</h4>
+            </div>
+            <div class="card-body">
+                <h5>Add Item to Sale</h5>
+                <form method="post" class="mb-4">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-4">
+                            {{ item_form.item_id }}
+                        </div>
+                        <div class="col-md-4">
+                            {{ item_form.quantity }}
+                        </div>
+                        <div class="col-md-4">
+                            <button type="submit" name="add_item" class="btn btn-primary w-100">
+                                <i class="bi bi-plus-circle"></i> Add Item
+                            </button>
+                        </div>
+                    </div>
+                </form>
+
+                <h5>Current Sale Items</h5>
+                {% if sale.items.all %}
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Quantity</th>
+                            <th>Unit Price</th>
+                            <th>Subtotal</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for sale_item in sale.items.all %}
+                        <tr>
+                            <td>{{ sale_item.item.name }}</td>
+                            <td>{{ sale_item.quantity }}</td>
+                            <td>${{ sale_item.unit_price }}</td>
+                            <td>${{ sale_item.subtotal }}</td>
+                            <td>
+                                <form method="post" style="display:inline;">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="item_id" value="{{ sale_item.item.item_id }}">
+                                    <button type="submit" name="remove_item" class="btn btn-sm btn-danger">
+                                        <i class="bi bi-trash"></i>
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+                {% else %}
+                <p class="text-muted">No items in sale yet.</p>
+                {% endif %}
+
+                <div class="mt-3">
+                    <h5>Apply Coupon</h5>
+                    <form method="post" class="d-flex">
+                        {% csrf_token %}
+                        <div class="flex-grow-1 me-2">
+                            {{ coupon_form.coupon_code }}
+                        </div>
+                        <button type="submit" name="apply_coupon" class="btn btn-secondary">
+                            <i class="bi bi-tag"></i> Apply
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header bg-success text-white">
+                <h5><i class="bi bi-calculator"></i> Sale Summary</h5>
+            </div>
+            <div class="card-body">
+                <table class="table">
+                    <tr>
+                        <td>Subtotal:</td>
+                        <td class="text-end">${{ sale.subtotal|default:"0.00" }}</td>
+                    </tr>
+                    {% if sale.discount_amount > 0 %}
+                    <tr>
+                        <td>Discount:</td>
+                        <td class="text-end text-danger">-${{ sale.discount_amount }}</td>
+                    </tr>
+                    {% endif %}
+                    <tr>
+                        <td>Tax:</td>
+                        <td class="text-end">${{ sale.tax_amount|default:"0.00" }}</td>
+                    </tr>
+                    <tr class="table-primary">
+                        <td><strong>Total:</strong></td>
+                        <td class="text-end"><strong>${{ sale.total_amount|default:"0.00" }}</strong></td>
+                    </tr>
+                </table>
+                <form method="post">
+                    {% csrf_token %}
+                    <button type="submit" name="finalize" class="btn btn-success w-100" 
+                            {% if not sale.items.all %}disabled{% endif %}>
+                        <i class="bi bi-check-circle"></i> Complete Sale
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
